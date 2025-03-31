@@ -36,11 +36,7 @@ FAL_KEY=your_fal_ai_api_key
 You can set this environment variable in your shell, or create a `.env` file in the same directory as the server with the above content.
 
 ## Demo
-
-
-Uploading 画面収録 2025-04-01 0.43.57.mov…
-
-
+https://github.com/user-attachments/assets/564a0fc3-9204-4399-b1ea-ab6a5c9f2d84
 
 ## Quickstart
 
