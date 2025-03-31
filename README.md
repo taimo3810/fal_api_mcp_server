@@ -1,32 +1,51 @@
-# fal_api_mcp_server MCP server
+# fal-api-mcp-server
 
-A MCP server project
+A Model Context Protocol (MCP) server that provides image generation capabilities using fal.ai's FLUX.1 Pro model.
 
 ## Components
 
 ### Resources
 
-The server implements a simple note storage system with:
-- Custom note:// URI scheme for accessing individual notes
-- Each note resource has a name, description and text/plain mimetype
-
-### Prompts
-
-The server provides a single prompt:
-- summarize-notes: Creates summaries of all stored notes
-  - Optional "style" argument to control detail level (brief/detailed)
-  - Generates prompt combining all current notes with style preference
+This server does not provide any persistent resources as fal.ai is primarily a stateless model execution service.
 
 ### Tools
 
 The server implements one tool:
-- add-note: Adds a new note to the server
-  - Takes "name" and "content" as required string arguments
-  - Updates server state and notifies clients of resource changes
+
+- **generate_image**: Generates images based on text prompts using fal.ai FLUX.1 Pro
+  - Required parameters:
+    - `prompt`: The text prompt to generate the image from
+  - Optional parameters:
+    - `image_size`: The desired image size (default: "landscape_4_3")
+      - Options: "square_hd", "square", "portrait_4_3", "portrait_16_9", "landscape_4_3", "landscape_16_9"
+    - `num_images`: The number of images to generate (default: 1)
+    - `enable_safety_checker`: Enable the safety checker (default: true)
+    - `safety_tolerance`: Safety tolerance level 1-6, higher is more permissive (default: "2")
+    - `output_format`: Output image format, "jpeg" or "png" (default: "jpeg")
 
 ## Configuration
 
-[TODO: Add configuration details specific to your implementation]
+This server requires a fal.ai API key to function properly. You can obtain an API key by signing up at [fal.ai](https://www.fal.ai/).
+
+The API key should be provided as an environment variable:
+
+```
+FAL_KEY=your_fal_ai_api_key
+```
+
+You can set this environment variable in your shell, or create a `.env` file in the same directory as the server with the above content.
+
+## Demo
+
+[Demo Video Coming Soon]
+
+<!-- 
+To add your demo video:
+1. Upload your video to a hosting service (YouTube, Vimeo, etc.)
+2. Replace the placeholder above with the embed code or link
+3. For GitHub markdown, you can use:
+   [![Demo Video](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
+-->
 
 ## Quickstart
 
@@ -39,16 +58,20 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
 <details>
   <summary>Development/Unpublished Servers Configuration</summary>
-  ```
+  
+  ```json
   "mcpServers": {
-    "fal_api_mcp_server": {
+    "fal-api-mcp-server": {
       "command": "uv",
       "args": [
         "--directory",
-        "/Users/tai.mori/PycharmProjects/fal_api_mcp_server",
+        "/path/to/fal-api-mcp-server",
         "run",
-        "fal_api_mcp_server"
-      ]
+        "fal-api-mcp-server"
+      ],
+      "env": {
+        "FAL_KEY": "your_fal_ai_api_key"
+      }
     }
   }
   ```
@@ -56,17 +79,31 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
 <details>
   <summary>Published Servers Configuration</summary>
-  ```
+  
+  ```json
   "mcpServers": {
-    "fal_api_mcp_server": {
+    "fal-api-mcp-server": {
       "command": "uvx",
       "args": [
-        "fal_api_mcp_server"
-      ]
+        "fal-api-mcp-server"
+      ],
+      "env": {
+        "FAL_KEY": "your_fal_ai_api_key"
+      }
     }
   }
   ```
 </details>
+
+### Usage
+
+Once the server is configured and running, you can use it with Claude to generate images. Example prompts:
+
+- "Generate an image of a mountain landscape at sunset"
+- "Create a portrait of a cyberpunk character with neon lights"
+- "Show me a futuristic cityscape with flying cars"
+
+Claude will use the fal.ai FLUX.1 Pro model to generate the requested images.
 
 ## Development
 
@@ -100,21 +137,10 @@ Note: You'll need to set PyPI credentials via environment variables or command f
 Since MCP servers run over stdio, debugging can be challenging. For the best debugging
 experience, we strongly recommend using the [MCP Inspector](https://github.com/modelcontextprotocol/inspector).
 
-
 You can launch the MCP Inspector via [`npm`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) with this command:
 
 ```bash
-npx @modelcontextprotocol/inspector uv --directory /Users/tai.mori/PycharmProjects/fal_api_mcp_server run 2025-03-31T15:03:23.330Z [fal_api_mcp_server] [info] Initializing server...
-2025-03-31T15:03:23.421Z [fal_api_mcp_server] [info] Server started and connected successfully
-2025-03-31T15:03:23.509Z [fal_api_mcp_server] [info] Message from client: {"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"claude-ai","version":"0.1.0"}},"jsonrpc":"2.0","id":0}
-error: Failed to spawn: `fal_api_mcp_server`
-  Caused by: No such file or directory (os error 2)
-2025-03-31T15:03:23.687Z [fal_api_mcp_server] [info] Server transport closed
-2025-03-31T15:03:23.688Z [fal_api_mcp_server] [info] Client transport closed
-2025-03-31T15:03:23.688Z [fal_api_mcp_server] [info] Server transport closed unexpectedly, this is likely due to the process exiting early. If you are developing this MCP server you can add output to stderr (i.e. `console.error('...')` in JavaScript, `print('...', file=sys.stderr)` in python) and it will appear in this log.
-2025-03-31T15:03:23.688Z [fal_api_mcp_server] [error] Server disconnected. For troubleshooting guidance, please visit our [debugging documentation](https://modelcontextprotocol.io/docs/tools/debugging) {"context":"connection"}
-2025-03-31T15:03:23.688Z [fal_api_mcp_server] [info] Client transport closed
+npx @modelcontextprotocol/inspector uv --directory /path/to/fal-api-mcp-server run fal-api-mcp-server
 ```
-
 
 Upon launching, the Inspector will display a URL that you can access in your browser to begin debugging.
