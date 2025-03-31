@@ -37,15 +37,10 @@ You can set this environment variable in your shell, or create a `.env` file in 
 
 ## Demo
 
-[Demo Video Coming Soon]
 
-<!-- 
-To add your demo video:
-1. Upload your video to a hosting service (YouTube, Vimeo, etc.)
-2. Replace the placeholder above with the embed code or link
-3. For GitHub markdown, you can use:
-   [![Demo Video](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
--->
+Uploading 画面収録 2025-04-01 0.43.57.mov…
+
+
 
 ## Quickstart
 
